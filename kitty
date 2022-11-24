@@ -1,0 +1,29 @@
+#!/bin/sh
+
+#パイプラインからも渡せるように
+if [ -p /dev/stdin ]; then
+    src=`cat -`
+else
+    src=$1
+fi
+
+#置換する文字
+tar=(に ゃ ー)
+
+src=${src// /_}
+for s in ${src}; do
+    out=""
+    count=0
+    for ((i=0; i<${#s}; i++)); do
+        x=${s:$i:1}
+        if [ ${x} = "_" ]; then
+            out+="　"
+            count=0
+        else
+            ((index = count % ${#tar[@]}))
+            out+=${tar[${index}]}
+            count=$count+1
+        fi
+    done
+    echo "${out}"
+done
