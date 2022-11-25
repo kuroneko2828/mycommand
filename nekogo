@@ -1,0 +1,37 @@
+#!/bin/sh
+
+#パイプラインからも渡せるように
+if [ -p /dev/stdin ] || [ -f /dev/stdin ]; then
+    src=`cat -`
+else
+    src=$1
+fi
+
+src=${src// /_}
+flag=true
+for s in ${src}; do
+    out=""
+    for ((i=0; i<${#s}; i++)); do
+        x=${s:$i:1}
+        if [ ${x} = "_" ]; then
+            out+="　"
+        elif [ ${x} = "な" ]; then
+            out+="にゃ"
+            flag=false
+        elif [ ${x} = "ナ" ]; then
+            out+="ニャ"
+            flag=false
+        elif [ ${x} = "。" ]; then
+            if "${flag}"; then
+                out+="にゃ。"
+            else
+                out+="。"
+                flag=true
+            fi
+        else
+            out+=${x}
+            flag=true
+        fi
+    done
+    echo "${out}"
+done

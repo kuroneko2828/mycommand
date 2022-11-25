@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #パイプラインからも渡せるように
-if [ -p /dev/stdin ]; then
+if [ -p /dev/stdin ] || [ -f /dev/stdin ]; then
     src=`cat -`
 else
     src=$1
